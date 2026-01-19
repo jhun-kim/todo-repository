@@ -3,19 +3,19 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - main 
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        [cite_start]uses: actions/checkout@v3
+        uses: actions/checkout@v3
 
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.9.0
         with:
-          [cite_start]ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
       - name: Add EC2 to known_hosts
         run: |
@@ -24,7 +24,8 @@ jobs:
       - name: Run deploy script on EC2
         run: |
           ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+          # deploy.sh가 있는 ubuntu 폴더로 이동하여 실행 [cite: 120]
           cd ~/workspace/todo-repository/ubuntu
           chmod +x deploy.sh
           ./deploy.sh
-          EOF 
+          EOF
